@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoscoLogistics</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2>CoscoLogistics</h2>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="services.html" class="nav-link">Services</a>
+                <a href="tracking.html" class="nav-link active">Tracking</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+            </div>
+            <div class="nav-toggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Track Your Package</h1>
+            <p>Enter your tracking number to get real-time updates on your shipment</p>
+        </div>
+    </section>
+
+    <!-- Tracking Section -->
+    <section class="tracking-section">
+        <div class="container">
+            <div class="tracking-form-container">
+                <form class="tracking-form-main" id="trackingForm">
+                    <div class="form-group">
+                        <label for="trackingNumber">Tracking Number</label>
+                        <input type="text" id="trackingNumber" placeholder="Enter your tracking number (e.g., LF123456789)" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Track Package
+                    </button>
+                </form>
+                
+                <div class="api-status" id="apiStatus">
+                    <div class="status-indicator">
+                        <i class="fas fa-info-circle"></i>
+                        <span id="apiStatusText">Using sample data for demonstration</span>
+                    </div>
+                    <button id="toggleApiMode" class="btn-link" onclick="toggleApiMode()">
+                        Switch to Live API
+                    </button>
+                </div>
+                
+                <div class="tracking-tips">
+                    <h3>Tracking Tips:</h3>
+                    <ul>
+                        <li>Tracking numbers are typically 10-12 characters long</li>
+                        <li>Check your confirmation email for the tracking number</li>
+                        <li>Updates may take up to 24 hours to appear</li>
+                        <li>For assistance, contact our support team</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tracking Results -->
+            <div class="tracking-results" id="trackingResults" style="display: none;">
+                <div class="package-info">
+                    <h2>Package Details</h2>
+                    <div class="package-details">
+                        <div class="detail-item">
+                            <strong>Tracking Number:</strong>
+                            <span id="resultTrackingNumber"></span>
+                        </div>
+                        <div class="detail-item">
+                            <strong>Status:</strong>
+                            <span id="resultStatus" class="status-badge"></span>
+                        </div>
+                        <div class="detail-item">
+                            <strong>Estimated Delivery:</strong>
+                            <span id="resultDelivery"></span>
+                        </div>
+                        <div class="detail-item">
+                            <strong>Service Type:</strong>
+                            <span id="resultService"></span>
+                        </div>
+                        <div class="detail-item">
+                            <strong>Origin:</strong>
+                            <span id="resultOrigin"></span>
+                        </div>
+                        <div class="detail-item">
+                            <strong>Destination:</strong>
+                            <span id="resultDestination"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tracking Timeline -->
+                <div class="tracking-timeline">
+                    <h2>Tracking Timeline</h2>
+                    <div class="timeline" id="trackingTimeline">
+                        <!-- Timeline items will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Package Map -->
+                <div class="tracking-map">
+                    <h2>Current Location</h2>
+                    <div class="map-placeholder">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <p id="currentLocation">Loading location...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Error Message -->
+            <div class="tracking-error" id="trackingError" style="display: none;">
+                <div class="error-content">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h3>Tracking Number Not Found</h3>
+                    <p>We couldn't find any information for the tracking number you entered. Please check the number and try again.</p>
+                    <button class="btn btn-secondary" onclick="resetTracking()">Try Again</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sample Tracking Numbers -->
+    <section class="sample-tracking">
+        <div class="container">
+            <h2>Try Sample Tracking Numbers</h2>
+            <p>Test the tracking system with these sample numbers:</p>
+            <div class="sample-numbers">
+                <div class="sample-item" onclick="fillTrackingNumber('LF123456789')">
+                    <code>LF123456789</code>
+                    <span class="sample-status delivered">Delivered</span>
+                </div>
+                <div class="sample-item" onclick="fillTrackingNumber('LF987654321')">
+                    <code>LF987654321</code>
+                    <span class="sample-status in-transit">In Transit</span>
+                </div>
+                <div class="sample-item" onclick="fillTrackingNumber('LF456789123')">
+                    <code>LF456789123</code>
+                    <span class="sample-status processing">Processing</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tracking Features -->
+    <section class="tracking-features">
+        <div class="container">
+            <h2>Tracking Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-clock"></i>
+                    <h3>Real-Time Updates</h3>
+                    <p>Get instant notifications as your package moves through our network.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-mobile-alt"></i>
+                    <h3>Mobile Tracking</h3>
+                    <p>Track your packages on the go with our mobile-optimized tracking system.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-bell"></i>
+                    <h3>SMS Alerts</h3>
+                    <p>Receive SMS notifications for important delivery updates and status changes.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-history"></i>
+                    <h3>Delivery History</h3>
+                    <p>View complete tracking history and delivery confirmation details.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>CoscoLogistics</h3>
+                    <p>Your trusted partner for global logistics solutions. Fast, reliable, and secure delivery services worldwide.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="tracking.html">Tracking</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="#">Express Shipping</a></li>
+                        <li><a href="#">Warehousing</a></li>
+                        <li><a href="#">Ground Transport</a></li>
+                        <li><a href="#">Air Freight</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <ul>
+                        <li><i class="fas fa-phone"></i> +2349024608890</li>
+                        <li><i class="fas fa-envelope"></i> kesrealog@gmail.com</li>
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Logistics Ave, Business District</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 . All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
